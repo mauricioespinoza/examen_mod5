@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: Mauro
+Build-Jdk: 17.0.1
+Implementation-Title: beltexam
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: cl.desafiolatam.examen
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/beltexam
+Created-By: Maven Integration for Eclipse
+

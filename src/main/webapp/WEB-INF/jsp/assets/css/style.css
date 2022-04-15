@@ -1,0 +1,8 @@
+body{
+    background-image: url(/assets/img/fondo.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+#loginPage{
+    background-color: orangered;
+}
