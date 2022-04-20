@@ -10,8 +10,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="/assets/css/style.css">
-    <title>Show Details</title>
+    <link rel="stylesheet" href="/static/css/styleGeneral.css">
+    <title>Detalles y Ranking de show</title>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -27,11 +27,11 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item mr-5">
-                    <a class="nav-link" href="/shows/new">Add a show</a>
+                    <a class="nav-link" href="/shows/new">Agrega un show</a>
                 </li>
                 <li class="nav-item">
                     <form id="logoutForm" method="POST" action="/logout">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                        
                         <input type="submit" value="Logout" class="btn btn-link text-secondary" />
                     </form>
                 </li>
@@ -39,13 +39,13 @@
         </div>
     </nav>
     <div class="container mt-3">
-        <h1>Title: ${show.showTitle}</h1>
-        <h2>Network: ${show.showNetwork}</h2>
-        <h2 class="font-weight-bold">Users who rated this show</h2>
+        <h1>Titulo: ${show.showTitle}</h1>
+        <h2>Canal que lo emite: ${show.showNetwork}</h2>
+        <h6 class="font-weight-bold text-end">Clasifica el show para que puedas ver sus clasificaciones:</h2>
         <table class="table table-dark">
             <thead>
                 <tr>
-                    <th scope="col">Name</th>
+                    <th scope="col">Usuario</th>
                     <th scope="col">Rating</th>
                 </tr>
             </thead>
@@ -58,26 +58,27 @@
                 </c:forEach>
             </tbody>
         </table>
-        <c:if test="${currentUser.id == creatorShow.id }">
-            <a href="/shows/${show.id}/edit" class="btn btn-info">Edit</a>
+        <c:if test="${currentUser.getId() == creatorShow.getId() }">
+            <a href="/shows/${show.id}/edit" class="btn btn-info">Editar</a>
         </c:if>
         <br /> <br />
         <form:form method="POST" action="/shows/${show.id}/add" modelAttribute="addRating">
-            <form:hidden path="user" value="${currentUser.id}" />
+            <form:hidden path="user" value="${currentUser.getId()}"/>
             <form:hidden path="shows" value="${show.id}" />
             <div class="form-inline">
-                <form:label path="rating">Leave a rating: </form:label>
-                <div class="mx-3">
-                    <form:input type="number" min="1" max="5" path="rating" class="form-control" />
+                <form:label path="rating">Indica su valor (Rating): </form:label>
+                <div class="mx-1">
+                    <form:input type="number" min="1" max="5" path="rating" class="form-control" style="width: 15%"/>
                     <form:errors path="rating" />
                 </div>
                 <div class="">
-                    <input type="submit" value="Rate!" class="btn btn-primary" />
+                    <input type="submit" value="Rankear!" class="btn btn-primary" style="margin: 1rem"/>
+                    <a href="/shows" class="btn btn-dark">Retornar</a>
                 </div>
             </div>
         </form:form>
         <div class="mt-5 pb-5">
-            <a href="/shows" class="btn btn-dark">Go back</a>
+            
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"

@@ -13,11 +13,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import cl.desafiolatam.examen.model.Role;
-import cl.desafiolatam.examen.model.Users;
+import cl.desafiolatam.examen.model.User;
 import cl.desafiolatam.examen.repository.UserRepository;
 
 @Service
-@Lazy
 public class UserDetailsServiceImplementation implements UserDetailsService {
 	@Autowired
 	private UserRepository userRepository;
@@ -26,17 +25,17 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		/*
 		 * Nota: dejo esta linea por si debo modificar el software en el futuro y
-		 * agregar administradores Users user = userRepository.findByUsername(username);
+		 * agregar administradores User user = userRepository.findByUsername(username);
 		 */
-		Users users = userRepository.findUserByEmail(username);
-		if (users == null) {
-			throw new UsernameNotFoundException("Users not found");
+		User user = userRepository.findUserByEmail(username);
+		if (user == null) {
+			throw new UsernameNotFoundException("User not found");
 		}
-		return new org.springframework.security.core.userdetails.User(users.getEmail(), users.getPassword(),
-				getAuthorities(users));
+		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(),
+				getAuthorities(user));
 	}
 
-	private List<GrantedAuthority> getAuthorities(Users user) {
+	private List<GrantedAuthority> getAuthorities(User user) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		// authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		for (Role role : user.getRoles()) {

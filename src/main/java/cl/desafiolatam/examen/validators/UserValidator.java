@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import cl.desafiolatam.examen.model.Users;
+import cl.desafiolatam.examen.model.User;
 import cl.desafiolatam.examen.service.UserService;
 
 @Component
@@ -20,23 +20,24 @@ public class UserValidator implements Validator {
 	
 	@Override
 	public boolean supports(Class<?> clazz) {
-		return Users.class.equals(clazz);
+		return User.class.equals(clazz);
 	}
 	
 	@Override
 	public void validate(Object object, Errors errors) {
-		Users users = (Users) object;
-		if (!users.getPasswordConfirmation().equals(users.getPassword()))
+		User user = (User) object;
+		System.out.println("Este es el email recibido: "+user.getEmail()+". este es la clave recbida: "+ user.getPassword());
+		if (!user.getPasswordConfirmation().equals(user.getPassword()))
 		{
 			errors.rejectValue("passwordConfirmation", "Match");
 		}
-		Users userCheck = userService.findUserByEmail(users.getEmail());
+		User userCheck = userService.findUserByEmail(user.getEmail());
 		if (userCheck != null) {
 			errors.rejectValue("email", "Found");
 		}
 		String regex = "^([_a-zA-Z0-9-]+(\\.[_a-zA-Z0-9-]+)*@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*(\\.[a-zA-Z]{1,6}))?$";
 		Pattern pattern = Pattern.compile(regex);
-		Matcher matcher = pattern.matcher(users.getEmail());
+		Matcher matcher = pattern.matcher(user.getEmail());
 		if (!matcher.matches()) {
 			errors.rejectValue("email", "Match");
 		}

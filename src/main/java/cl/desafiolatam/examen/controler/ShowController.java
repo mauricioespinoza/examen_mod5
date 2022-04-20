@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import cl.desafiolatam.examen.model.Rating;
 import cl.desafiolatam.examen.model.Show;
-import cl.desafiolatam.examen.model.Users;
+import cl.desafiolatam.examen.model.User;
 import cl.desafiolatam.examen.service.RatingService;
 import cl.desafiolatam.examen.service.ShowService;
 import cl.desafiolatam.examen.service.UserService;
@@ -34,7 +34,12 @@ public class ShowController {
 	@Autowired
 	private RatingService ratingService;
 
-// ADD RATING
+// Agrego rating
+	@GetMapping(value = "/{id}/add")
+	public String addRatingForm(Model model) {
+		return "show";
+	}
+	
 	@PostMapping(value = "/{id}/add")
 	public String addRating(@Valid @ModelAttribute("addRating") Rating rating, BindingResult result,
 			@PathVariable("id") Integer id, Principal principal) {
@@ -42,9 +47,9 @@ public class ShowController {
 			return "redirect:/shows/" + id;
 		} else {
 			String email = principal.getName();
-			Users currentUser = userService.findUserByEmail(email);
+			User currentUser = userService.findUserByEmail(email);
 			Show currentShow = showService.findById(id);
-			rating.setUsers(currentUser);
+			rating.setUser(currentUser);
 			ratingService.addRating(rating);
 			currentShow.setRatings(ratingService.findAllRatings());
 			showService.updateShow(currentShow);
@@ -52,13 +57,13 @@ public class ShowController {
 		}
 	}
 
-// READ ONE
+// Leer por id de show, aca debe agregar los atributos para que se pueda editar y agregar ranking
 	@GetMapping(value = "/{id}")
 	public String getShow(@PathVariable("id") Integer id, Model model, Principal principal) {
 		Show show = showService.findById(id);
-		Users creatorShow = show.getCreatorShow();
+		User creatorShow = show.getCreatorShow();
 		String email = principal.getName();
-		Users currentUser = userService.findUserByEmail(email);
+		User currentUser = userService.findUserByEmail(email);
 		List<Rating> showRatings = show.getRatings();
 		Rating newRating = new Rating();
 		model.addAttribute("addRating", newRating);
@@ -69,18 +74,18 @@ public class ShowController {
 		return "show";
 	}
 
-// READ ALL
+//Leo todos
 	@GetMapping("")
 	public String homePage(Principal principal, Model model) {
 		String email = principal.getName();
-		Users currentUser = userService.findUserByEmail(email);
+		User currentUser = userService.findUserByEmail(email);
 		List<Show> allShows = showService.findAllShows();
 		model.addAttribute("allShows", allShows);
 		model.addAttribute("currentUser", currentUser);
 		return "home";
 	}
 
-// CREATE NEW
+// Crear nuevo show
 	@GetMapping(value = "/new")
 	public String newShow(Model model) {
 		Show newShow = new Show();
@@ -88,21 +93,21 @@ public class ShowController {
 		return "new";
 	}
 
-//CREATE SAVE
+//Guardar el nuevo show
 	@PostMapping(value = "/create")
 	public String createShow(@ModelAttribute("newShow") @Valid Show show, BindingResult result, Principal principal) {
 		if (result.hasErrors()) {
 			return "new";
 		} else {
 			String email = principal.getName();
-			Users creatorShow = userService.findUserByEmail(email);
+			User creatorShow = userService.findUserByEmail(email);
 			show.setCreatorShow(creatorShow);
 			showService.saveShow(show);
 			return "redirect:/shows";
 		}
 	}
 
-//EDIT
+//Editar show
 	@GetMapping(value = "/{id}/edit")
 	public String editShow(@PathVariable("id") Integer id, Model model, @ModelAttribute("errors") String errors) {
 		Show editShow = showService.findById(id);
@@ -110,13 +115,13 @@ public class ShowController {
 		return "edit";
 	}
 
-//UPDATE
+//actualizar
 	@PostMapping(value = "/{id}/edit")
 	public String updateShow(@PathVariable("id") Integer id, @Valid @ModelAttribute("editShow") Show editedShow,
 			BindingResult result, Model model, Principal principal, HttpSession session) {
 		String email = principal.getName();
 		Show show = showService.findById(id);
-		Users creatorShow = userService.findUserByEmail(email);
+		User creatorShow = userService.findUserByEmail(email);
 		if (result.hasErrors()) {
 			session.setAttribute("id", show.getId());
 			return "redirect:/shows/createError";

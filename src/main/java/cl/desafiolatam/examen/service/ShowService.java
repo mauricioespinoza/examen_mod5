@@ -11,7 +11,6 @@ import cl.desafiolatam.examen.model.Show;
 import cl.desafiolatam.examen.repository.ShowRepository;
 
 @Service
-@Lazy
 public class ShowService {
 	@Autowired
 	private ShowRepository showRepository;

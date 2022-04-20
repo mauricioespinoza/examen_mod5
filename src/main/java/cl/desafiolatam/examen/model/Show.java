@@ -5,11 +5,6 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 @Entity
 @Table(name = "shows")
 public class Show {
@@ -29,7 +24,7 @@ public class Show {
 // N:1 USER
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	private Users creatorShow;
+	private User creatorShow;
 	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name = "shows_ratings", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "rating_id"))
 	private List<Rating> ratings;
@@ -40,10 +35,10 @@ public class Show {
 	public void setRatings(List<Rating> ratings) {
 		this.ratings = ratings;
 	}
-	public Users getCreatorShow() {
+	public User getCreatorShow() {
 		return creatorShow;
 	}
-	public void setCreatorShow(Users creatorShow) {
+	public void setCreatorShow(User creatorShow) {
 		this.creatorShow = creatorShow;
 	}
 	public Integer getId() {

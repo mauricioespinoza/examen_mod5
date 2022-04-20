@@ -6,11 +6,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 @Entity
 @Table(name = "ratings")
 public class Rating {
@@ -27,16 +22,18 @@ public class Rating {
 
 // RELACIONES
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
-	private Users users;
+	@JoinColumn(name="user_id")
+	private User user;
+	
 	@ManyToMany(mappedBy = "ratings")
 	private List<Show> shows;
 
-	public Users getUsers() {
-		return users;
+	//getter and setters
+	public User getUser() {
+		return user;
 	}
-	public void setUsers(Users users) {
-		this.users = users;
+	public void setUser(User user) {
+		this.user = user;
 	}
 	public Integer getId() {
 		return id;
@@ -57,5 +54,10 @@ public class Rating {
 		this.shows = shows;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "Rating [id=" + id + ", rating=" + rating + ", user=" + user + ", shows=" + shows + ", getUsers()="
+				+ getUser() + ", getId()=" + getId() + ", getRating()=" + getRating() + ", getShows()=" + getShows()
+				+ "]";
+	}
 }

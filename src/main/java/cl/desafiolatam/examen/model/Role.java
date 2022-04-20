@@ -4,11 +4,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
 @Entity
 @Table(name = "roles")
 public class Role {
@@ -19,7 +15,7 @@ public class Role {
 	private String name;
 // RELACIONES
 	@ManyToMany(mappedBy = "roles")
-	private List<Users> users;
+	private List<User> user;
 	public Integer getId() {
 		return id;
 	}
@@ -32,11 +28,11 @@ public class Role {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<Users> getUsers() {
-		return users;
+	public List<User> getUsers() {
+		return user;
 	}
-	public void setUsers(List<Users> users) {
-		this.users = users;
+	public void setUsers(List<User> user) {
+		this.user = user;
 	}
 	
 	

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/static/css/styleGeneral.css">
     <title>New show</title>
 </head>
 <body>
@@ -27,13 +27,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item mr-5">
-                    <a class="nav-link" href="/shows/new">
-                        Add a show
+                    <a class="nav-link" href="/home">
+                        Home
                     </a>
                 </li>
                 <li class="nav-item">
                     <form id="logoutForm" method="POST" action="/logout">
-                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                   
                         <input type="submit" value="Logout" class="btn btn-link text-secondary" />
                     </form>
                 </li>
@@ -41,12 +41,12 @@
         </div>
     </nav>
     <div class="container mt-3">
-        <h1>Create a new show</h1>
+		<h1>Crear un nuevo show</h1>
         <form:errors path="show.*" />
-        <form:form method="POST" action="/shows/create" modelAttribute="newShow">
+        <form:form method="POST" action="/shows/create" modelAttribute="newShow" style="width: 50%">
             <div class="form-group row pt-2">
-                <form:label path="showTitle" class="col-sm-2 col-form-label col-form-label-sm">
-                    Show title: 
+                <form:label path="showTitle" class="col-sm-2 col-form-label col-form-label-l">
+                    Titulo del show: 
                 </form:label>
                 <div class="col-sm-10">
                     <form:input type="text" path="showTitle" class="form-control" />
@@ -56,8 +56,8 @@
                 <small><form:errors path="showTitle" /></small>
             </div>
             <div class="form-group row">
-                <form:label path="showNetwork" class="col-sm-2 col-form-label col-form-label-sm">
-                    Network: 
+                <form:label path="showNetwork" class="col-sm-2 col-form-label col-form-label-l">
+                    Canal que lo emite: 
                 </form:label>
                 <div class="col-sm-10">
                     <form:input type="text" path="showNetwork" class="form-control" />
@@ -67,12 +67,10 @@
                 <small><form:errors path="showNetwork" /></small>
             </div>
             <div class="text-center pt-4">
-                <input type="submit" value="Create" class="btn btn-lg btn-primary" />
+                <input type="submit" value="Crear" class="btn btn-primary" style="margin: 1rem"/>
+				<a href="/shows" class="btn btn-dark">Retornar</a>
             </div>
         </form:form>
-        <div class="mt-5 pb-5">
-            <a href="/shows" class="btn btn-dark">Go back</a>
-        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

@@ -2,7 +2,6 @@ package cl.desafiolatam.examen.controler;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cl.desafiolatam.examen.model.Users;
+import cl.desafiolatam.examen.model.User;
 import cl.desafiolatam.examen.service.UserService;
 import cl.desafiolatam.examen.validators.UserValidator;
 
@@ -27,41 +25,46 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@RequestMapping("/login")
-	public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "logout", required = false)
-	String logout, Model model, @Valid @ModelAttribute("users") Users users, BindingResult result) {
-		System.out.println("Llega asi el modelo: "+model.toString()); 
-		System.out.println("email de usuario: "+users.getEmail()+" . Clave del usuario: "+users.getPassword());
+
+	@GetMapping("/login")
+	public String loginForm(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "logout", required = false)
+	String logout, Model model, @Valid @ModelAttribute("user") User user, BindingResult result) {
+		//Con esto se "alimentan" las instancias de mensajes en login
 		if (error != null) {
 			model.addAttribute("errorMessage", "Credenciales invalidas, intente nuevamente");
 		}
 		if (logout != null) {
-			model.addAttribute("logoutMessage", "Login exitoso!");
+			model.addAttribute("logoutMessage", "Login exitoso!");	
 		}
 		return "login";
 	}
 	
 
 	@GetMapping("/registration")
-	public String registerForm(@Valid @ModelAttribute("user") Users users) {
+	public String registerForm(@Valid @ModelAttribute("user") User user) {
 		return "registration";
 	}
 
 	@PostMapping("/registration")
-	public String registration(@Valid @ModelAttribute("user") Users users, BindingResult result) {
-		userValidator.validate(users, result);
+	public String registration(@Valid @ModelAttribute("user") User user, BindingResult result) {
+		userValidator.validate(user, result);
 		if (result.hasErrors()) {
 			return "registration";
 		} else {
-			userService.saveWithUserRole(users);
-			// userService.saveUserWithAdminRole(users);
+			userService.saveWithUserRole(user);
+			/*En el requerimiento se indica solo ingresar usuarios con rol: ROLE_USER, pero se deja comentado
+			 * el metodo a invocar para generar usuarios con rol: role_admin:
+			 *  userService.saveUserWithAdminRole(user);
+			 *  
+			 *   NOTA: De todas formas en el websecurityconfig, está establecido que ambos roles pueden acceder a plataforma usuario,
+			 *   la plataforma admin no se ha definido ya que no estaba en los alcances*/
 			return "redirect:/login";
 		}
 	}
 
 	@RequestMapping(value = { "/", "/home" })
 	public String home(Principal principal) {
-		return "redirect:/shows";
+		return "redirect:/shows";	
 	}
 
 }

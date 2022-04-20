@@ -10,7 +10,6 @@ import cl.desafiolatam.examen.model.Rating;
 import cl.desafiolatam.examen.repository.RatingRepository;
 
 @Service
-@Lazy
 public class RatingService {
 	@Autowired
 	private RatingRepository ratingRepository;

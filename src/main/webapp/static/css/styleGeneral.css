@@ -1,0 +1,8 @@
+body {
+	background-image: url(/static/img/fondoGeneral.jpg);;
+	background-size: cover;
+	background-repeat: no-repeat;
+	height: 100%;
+	font-family: 'Numans', sans-serif;
+	color: white;
+}
