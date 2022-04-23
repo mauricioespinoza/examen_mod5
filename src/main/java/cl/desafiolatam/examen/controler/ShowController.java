@@ -20,20 +20,26 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import cl.desafiolatam.examen.model.Rating;
 import cl.desafiolatam.examen.model.Show;
 import cl.desafiolatam.examen.model.User;
-import cl.desafiolatam.examen.service.RatingService;
-import cl.desafiolatam.examen.service.ShowService;
-import cl.desafiolatam.examen.service.UserService;
+import cl.desafiolatam.examen.service.UserServiceImpl;
+import cl.desafiolatam.examen.service.impl.RatingServiceImpl;
+import cl.desafiolatam.examen.service.impl.ShowServiceImpl;
 
 @Controller
 @RequestMapping("/shows")
 public class ShowController {
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userServiceImpl;
 	@Autowired
-	private ShowService showService;
+	private ShowServiceImpl showServiceImpl;
 	@Autowired
-	private RatingService ratingService;
-
+	private RatingServiceImpl ratingServiceImpl;
+/*NOTA:
+ * Aca se puede apreciar la implementación del requerimiento opcional:
+ * Crear un DTO, setear atributos y enviar el objeto, desde los controladores, hacia las
+vistas para que se muestre sus valores.
+En este caso, el package por diseño, es model, de ahi desde este controlador en varias instancias, se maneja y 
+setean datos hacia las vistas JSP*/
+	
 // Agrego rating
 	@GetMapping(value = "/{id}/add")
 	public String addRatingForm(Model model) {
@@ -47,12 +53,12 @@ public class ShowController {
 			return "redirect:/shows/" + id;
 		} else {
 			String email = principal.getName();
-			User currentUser = userService.findUserByEmail(email);
-			Show currentShow = showService.findById(id);
+			User currentUser = userServiceImpl.findUserByEmail(email);
+			Show currentShow = showServiceImpl.findById(id);
 			rating.setUser(currentUser);
-			ratingService.addRating(rating);
-			currentShow.setRatings(ratingService.findAllRatings());
-			showService.updateShow(currentShow);
+			ratingServiceImpl.addRating(rating);
+			currentShow.setRatings(ratingServiceImpl.findAllRatings());
+			showServiceImpl.updateShow(currentShow);
 			return "redirect:/shows/" + id;
 		}
 	}
@@ -60,10 +66,10 @@ public class ShowController {
 // Leer por id de show, aca debe agregar los atributos para que se pueda editar y agregar ranking
 	@GetMapping(value = "/{id}")
 	public String getShow(@PathVariable("id") Integer id, Model model, Principal principal) {
-		Show show = showService.findById(id);
+		Show show = showServiceImpl.findById(id);
 		User creatorShow = show.getCreatorShow();
 		String email = principal.getName();
-		User currentUser = userService.findUserByEmail(email);
+		User currentUser = userServiceImpl.findUserByEmail(email);
 		List<Rating> showRatings = show.getRatings();
 		Rating newRating = new Rating();
 		model.addAttribute("addRating", newRating);
@@ -74,12 +80,12 @@ public class ShowController {
 		return "show";
 	}
 
-//Leo todos
+//Leo todos para desplegar en el home
 	@GetMapping("")
 	public String homePage(Principal principal, Model model) {
 		String email = principal.getName();
-		User currentUser = userService.findUserByEmail(email);
-		List<Show> allShows = showService.findAllShows();
+		User currentUser = userServiceImpl.findUserByEmail(email);
+		List<Show> allShows = showServiceImpl.findAllShows();
 		model.addAttribute("allShows", allShows);
 		model.addAttribute("currentUser", currentUser);
 		return "home";
@@ -100,9 +106,9 @@ public class ShowController {
 			return "new";
 		} else {
 			String email = principal.getName();
-			User creatorShow = userService.findUserByEmail(email);
+			User creatorShow = userServiceImpl.findUserByEmail(email);
 			show.setCreatorShow(creatorShow);
-			showService.saveShow(show);
+			showServiceImpl.saveShow(show);
 			return "redirect:/shows";
 		}
 	}
@@ -110,7 +116,7 @@ public class ShowController {
 //Editar show
 	@GetMapping(value = "/{id}/edit")
 	public String editShow(@PathVariable("id") Integer id, Model model, @ModelAttribute("errors") String errors) {
-		Show editShow = showService.findById(id);
+		Show editShow = showServiceImpl.findById(id);
 		model.addAttribute("editShow", editShow);
 		return "edit";
 	}
@@ -120,18 +126,18 @@ public class ShowController {
 	public String updateShow(@PathVariable("id") Integer id, @Valid @ModelAttribute("editShow") Show editedShow,
 			BindingResult result, Model model, Principal principal, HttpSession session) {
 		String email = principal.getName();
-		Show show = showService.findById(id);
-		User creatorShow = userService.findUserByEmail(email);
+		Show show = showServiceImpl.findById(id);
+		User creatorShow = userServiceImpl.findUserByEmail(email);
 		if (result.hasErrors()) {
 			session.setAttribute("id", show.getId());
 			return "redirect:/shows/createError";
 		} else {
 			editedShow.setCreatorShow(creatorShow);
-			showService.updateShow(editedShow);
+			showServiceImpl.updateShow(editedShow);
 			return "redirect:/shows/";
 		}
 	}
-
+//Manejo de errores en la creación
 	@RequestMapping("/createError")
 	public String flashMessages(RedirectAttributes redirectAttributes, HttpSession session) {
 		redirectAttributes.addFlashAttribute("errors", "Title and Network must be present");
@@ -142,7 +148,7 @@ public class ShowController {
 //DELETE / DESTROY
 	@GetMapping(value = "/{id}/delete")
 	public String deleteShow(@PathVariable("id") Integer id) {
-		showService.deleteShow(id);
+		showServiceImpl.deleteShow(id);
 		return "redirect:/shows/";
 	}
 }

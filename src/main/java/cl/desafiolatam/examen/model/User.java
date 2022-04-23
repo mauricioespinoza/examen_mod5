@@ -22,7 +22,8 @@ public class User {
 	private String password;
 	@Transient
 	private String passwordConfirmation;
-
+	
+	//Constructor que permite la transaccionabilidad con los otros models and entity
 	public User() {
 	}
 	
@@ -44,6 +45,7 @@ public class User {
 	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roles;
 
+	//Getters and Setters
 	public Integer getId() {
 		return id;
 	}

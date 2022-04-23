@@ -11,4 +11,7 @@ import cl.desafiolatam.examen.model.Role;
 public interface RoleRepository extends CrudRepository<Role, Integer> {
 	List<Role> findAll();
 	List<Role> findByName(String name);
+	/*NOTA: 
+	 * Este repositorio también es usado para generar la API REST de requerimiento opcional
+	 */
 }

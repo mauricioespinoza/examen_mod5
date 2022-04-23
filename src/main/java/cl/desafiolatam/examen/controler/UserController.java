@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import cl.desafiolatam.examen.model.User;
-import cl.desafiolatam.examen.service.UserService;
+import cl.desafiolatam.examen.service.UserServiceImpl;
 import cl.desafiolatam.examen.validators.UserValidator;
 
 @Controller
@@ -23,9 +23,9 @@ public class UserController {
 	@Autowired
 	private UserValidator userValidator;
 	@Autowired
-	private UserService userService;
+	private UserServiceImpl userServiceImpl;
 
-
+	/*login, manejo de mensajes por error o login ok*/
 	@GetMapping("/login")
 	public String loginForm(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "logout", required = false)
 	String logout, Model model, @Valid @ModelAttribute("user") User user, BindingResult result) {
@@ -39,22 +39,23 @@ public class UserController {
 		return "login";
 	}
 	
-
+	/*Despliega form de registro*/
 	@GetMapping("/registration")
 	public String registerForm(@Valid @ModelAttribute("user") User user) {
 		return "registration";
 	}
 
+	//Genera registro de usuario
 	@PostMapping("/registration")
 	public String registration(@Valid @ModelAttribute("user") User user, BindingResult result) {
 		userValidator.validate(user, result);
 		if (result.hasErrors()) {
 			return "registration";
 		} else {
-			userService.saveWithUserRole(user);
+			userServiceImpl.saveWithUserRole(user);
 			/*En el requerimiento se indica solo ingresar usuarios con rol: ROLE_USER, pero se deja comentado
 			 * el metodo a invocar para generar usuarios con rol: role_admin:
-			 *  userService.saveUserWithAdminRole(user);
+			 *  userServiceImpl.saveUserWithAdminRole(user);
 			 *  
 			 *   NOTA: De todas formas en el websecurityconfig, está establecido que ambos roles pueden acceder a plataforma usuario,
 			 *   la plataforma admin no se ha definido ya que no estaba en los alcances*/
@@ -62,6 +63,7 @@ public class UserController {
 		}
 	}
 
+	//maneja la instancia de jsp home v/s jsp shows
 	@RequestMapping(value = { "/", "/home" })
 	public String home(Principal principal) {
 		return "redirect:/shows";	

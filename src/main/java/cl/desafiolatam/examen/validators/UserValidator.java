@@ -8,14 +8,15 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import cl.desafiolatam.examen.model.User;
-import cl.desafiolatam.examen.service.UserService;
+import cl.desafiolatam.examen.service.UserServiceImpl;
 
 @Component
 public class UserValidator implements Validator {
-	private UserService userService;
+	private UserServiceImpl userServiceImpl;
 	
-	public UserValidator(UserService userService) {
-		this.userService = userService;
+	//aca implemento la clase solicitada en el requerimiento 5 y extiendo individualmente algunas funciones
+	public UserValidator(UserServiceImpl userServiceImpl) {
+		this.userServiceImpl = userServiceImpl;
 	}
 	
 	@Override
@@ -23,15 +24,15 @@ public class UserValidator implements Validator {
 		return User.class.equals(clazz);
 	}
 	
+	//Valido el error, para poder desplegarlo en caso que exista el mismo
 	@Override
 	public void validate(Object object, Errors errors) {
 		User user = (User) object;
-		System.out.println("Este es el email recibido: "+user.getEmail()+". este es la clave recbida: "+ user.getPassword());
 		if (!user.getPasswordConfirmation().equals(user.getPassword()))
 		{
 			errors.rejectValue("passwordConfirmation", "Match");
 		}
-		User userCheck = userService.findUserByEmail(user.getEmail());
+		User userCheck = userServiceImpl.findUserByEmail(user.getEmail());
 		if (userCheck != null) {
 			errors.rejectValue("email", "Found");
 		}

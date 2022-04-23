@@ -16,6 +16,8 @@ public class Role {
 // RELACIONES
 	@ManyToMany(mappedBy = "roles")
 	private List<User> user;
+	
+	//Getters and setters
 	public Integer getId() {
 		return id;
 	}

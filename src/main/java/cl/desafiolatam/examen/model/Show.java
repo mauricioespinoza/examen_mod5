@@ -29,6 +29,7 @@ public class Show {
 	@JoinTable(name = "shows_ratings", joinColumns = @JoinColumn(name = "show_id"), inverseJoinColumns = @JoinColumn(name = "rating_id"))
 	private List<Rating> ratings;
 
+	//Getters and Setters
 	public List<Rating> getRatings() {
 		return ratings;
 	}

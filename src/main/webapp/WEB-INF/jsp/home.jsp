@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -50,6 +51,7 @@ pageEncoding="UTF-8"%>
                     <tr>
                         <th scope="col">Show</th>
                         <th scope="col">Canal que lo emite</th>
+                        <th scope="col">Rating Promedio</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,6 +61,17 @@ pageEncoding="UTF-8"%>
                                 <a href="/shows/${show.id}" class="text-info font-weight-bold">${show.showTitle}</a>
                             </td>
                             <td>${show.showNetwork}</td>
+							<!-- Aca calculo el promedio por Rating -->
+                            <c:set var="promedio" value="${0}"/>
+                       		<c:set var="sumaTotalR" value="${0}" />
+                           	<c:forEach items="${show.ratings}" var="showR">
+                           		<c:set var="sumaTotalR" value="${sumaTotalR + showR.rating}" />
+                            </c:forEach>
+                            <c:set var="promedio" value="${sumaTotalR /show.ratings.size()}" />
+							 <td>
+							 	<fmt:formatNumber type = "number" groupingUsed = "false" value = "${promedio}" />
+							 </td>
+							 <!-- fin calculo promedio por ranking -->
                         </tr>
                     </c:forEach>
                 </tbody>
